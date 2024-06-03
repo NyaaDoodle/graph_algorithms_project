@@ -1,5 +1,4 @@
 #pragma once
-#include <stddef.h>
 #include "exception.h"
 
 template<class T> class Vector {

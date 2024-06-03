@@ -13,13 +13,13 @@ public:
     bool is_empty() const { return (head == nullptr && tail == nullptr); }
     void pop_head() {
         if (is_empty()) { throw EmptyListException(); }
-        LinkedList* temp = head;
+        LinkedNode* temp = head;
         head = head->next;
         if (head == nullptr) { tail = nullptr; }
         delete temp;
     }
     void push_tail(const T& t) {
-        LinkedList *new_node = new LinkedList(t);
+        LinkedNode *new_node = new LinkedNode(t);
         if (is_empty()) {
             head = tail = new_node;
         } else {
@@ -43,12 +43,41 @@ public:
         }
         return false;
     }
+    void search_and_delete(const T& val) {
+        if (is_empty()) { throw EmptyListException(); }
+        LinkedNode *prev_found = search_prev(val);
+        if (prev_found == nullptr) { pop_head(); return; }
+        if (prev_found != tail) {
+            LinkedNode *temp = prev_found->next;
+            prev_found->next = prev_found->next->next;
+            if (temp == tail) {
+                tail == prev_found->next;
+            }
+            delete temp;
+        }
+        else {
+            throw ItemNotFound();
+        }
+    }
 private:
     struct LinkedNode {
-        const T val;
+        T val;
         LinkedNode *next;
-        LinkedNode(const T& val, const LinkedNode *next = nullptr) : val(val), next(next) {}
+        LinkedNode(const T& val, LinkedNode * const next = nullptr) : val(val), next(next) {}
     };
     LinkedNode *head = nullptr;
     LinkedNode *tail = nullptr;
+    LinkedList* search_prev(const T& val) const {
+        LinkedNode *curr = head;
+        LinkedNode *prev = nullptr;
+        bool found = false;
+        while (curr != nullptr) {
+            if (curr->val == val) { found = true; }
+            if (!found) {
+                prev = curr;
+            }
+            curr = curr->next;
+        }
+        return prev;
+    }
 };
