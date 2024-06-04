@@ -2,6 +2,13 @@
 #include "exception.h"
 template<class T> class LinkedList {
 public:
+    class LinkedNode {
+    private:
+        T val;
+        LinkedNode *next;
+        LinkedNode(const T& val, LinkedNode * const next = nullptr) : val(val), next(next) {}
+        friend class LinkedList;
+    };
     LinkedList() = default;
     LinkedList(const LinkedList& ll) = delete;
     LinkedList& operator=(const LinkedList& ll) = delete;
@@ -51,7 +58,7 @@ public:
             LinkedNode *temp = prev_found->next;
             prev_found->next = prev_found->next->next;
             if (temp == tail) {
-                tail == prev_found->next;
+                tail = prev_found->next;
             }
             delete temp;
         }
@@ -59,15 +66,29 @@ public:
             throw ItemNotFound();
         }
     }
-private:
-    struct LinkedNode {
-        T val;
-        LinkedNode *next;
-        LinkedNode(const T& val, LinkedNode * const next = nullptr) : val(val), next(next) {}
+    class iterator {
+    public:
+        iterator(LinkedNode * const node = nullptr) : node(node) {}
+        iterator operator++() {
+            node = node->next;
+            return *this;
+        }
+        bool operator!=(iterator itr) const {
+            return node != itr.node;
+        }
+        T operator*() const {
+            return node->val;
+        }
+    private:
+        LinkedNode *node;
+        friend class LinkedList;
     };
+    iterator begin() { return head; }
+    iterator end() { return nullptr; }
+private:
     LinkedNode *head = nullptr;
     LinkedNode *tail = nullptr;
-    LinkedList* search_prev(const T& val) const {
+    LinkedNode* search_prev(const T& val) const {
         LinkedNode *curr = head;
         LinkedNode *prev = nullptr;
         bool found = false;

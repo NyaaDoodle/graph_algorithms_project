@@ -28,22 +28,19 @@ void GraphBuilder::input_number_of_edges() {
     edge_count = input;
 }
 
-void GraphBuilder::input_edges_to_graph(const size_t edge_count) {
-    constexpr char *DELIMITER = " ";
-    char buffer[MAX_LENGTH];
+void GraphBuilder::input_edges_to_graph() {
     Vertex start_vertex, end_vertex;
-    char *first, *second;
+    char first[MAX_LENGTH], second[MAX_LENGTH];
     for (long i = 0; i < edge_count; i++) {
-        std::cin >> buffer;
+        std::cin >> first;
+        std::cin >> second;
         flush_cin();
-        first = strtok(buffer, DELIMITER);
-        second = strtok(nullptr, DELIMITER);
-        if (second == nullptr) { invalid_input(); }
         start_vertex = parse_vertex(first);
         end_vertex = parse_vertex(second);
+        if (start_vertex == end_vertex) { invalid_input(); }
         try {
             graph.add_edge(start_vertex, end_vertex);
-        } catch (IndexOutOfBoundsException& e) { invalid_input(); }
+        } catch (const IndexOutOfBoundsException& e) { invalid_input(); }
     }
 }
 
