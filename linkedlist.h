@@ -10,7 +10,11 @@ public:
         friend class LinkedList;
     };
     LinkedList() = default;
-    LinkedList(const LinkedList& ll) = delete;
+    LinkedList(const LinkedList& ll) {
+        for (T t : ll) {
+            push_tail(t);
+        }
+    }
     LinkedList& operator=(const LinkedList& ll) = delete;
     ~LinkedList() {
         while (!(is_empty())) {
@@ -83,8 +87,8 @@ public:
         LinkedNode *node;
         friend class LinkedList;
     };
-    iterator begin() { return head; }
-    iterator end() { return nullptr; }
+    iterator begin() const { return head; }
+    iterator end() const { return nullptr; }
 private:
     LinkedNode *head = nullptr;
     LinkedNode *tail = nullptr;

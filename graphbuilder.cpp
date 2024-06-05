@@ -13,11 +13,15 @@ void GraphBuilder::input_number_of_vertices() {
     input = parse_long(buffer);
     try {
         graph.make_empty_graph(input);
+        for (long i = 1; i <= graph.get_vertices_range(); i++) {
+            graph.add_vertex(i);
+        }
     } catch (InvalidInputException& e) { invalid_input(); }
+    catch (IndexOutOfBoundsException& e) { invalid_input(); }
 }
 
 void GraphBuilder::input_number_of_edges() {
-    const long n = graph.get_vertices_count();
+    const long n = graph.get_vertices_range();
     const long MAX_EDGES = (n * (n-1)) / 2;
     char buffer[MAX_LENGTH];
     long input;
@@ -67,7 +71,7 @@ long GraphBuilder::parse_long(const char *buffer, const bool include_zero) {
 
 Vertex GraphBuilder::parse_vertex(const char *buffer) {
     Vertex input = parse_long(buffer, true);
-    if (input < 0 || input > graph.get_vertices_count()) {
+    if (input < 0 || input > graph.get_vertices_range()) {
         invalid_input();
     }
     return input;
