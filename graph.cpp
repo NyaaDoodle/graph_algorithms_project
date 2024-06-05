@@ -18,6 +18,7 @@ LinkedList<Vertex>& Graph::get_adjacent_list(const Vertex u) {
 void Graph::add_edge(const Vertex u, const Vertex v) {
     if (!(does_vertex_exist(u) && does_vertex_exist(v))) { throw VertexNotAdded(); }
     get_adjacent_list(u).push_tail(v);
+    edges_count++;
 }
 void Graph::remove_edge(const Vertex u, const Vertex v) {
     if (!(does_vertex_exist(u) && does_vertex_exist(v))) { throw VertexNotAdded(); }
@@ -72,22 +73,43 @@ Graph Graph::get_transposed_graph() {
     }
     return transpose_g;
 }
+
 Graph Graph::get_condensation_graph() {
     Graph conden_g;
     conden_g.make_empty_graph(vertices_count);
-    LinkedList<Vertex> f = dfs_to_f_list();
+    LinkedList<Vertex> rev_f = dfs_to_f_list().get_reversed_list();
     Graph gt = get_transposed_graph();
-    
+    Color color[vertices_count];
+    for (long u = 1; u <= get_vertices_count(); u++) { color[u-1] = Color::White; }
+    Vertex root[vertices_count];
+    Vertex current_root;
+    for (Vertex u : rev_f) {
+        if (color[u-1] == Color::White) {
+            conden_g.add_vertex(u);
+            current_root = u;
+            gt.visit_t(u, color, root, current_root, conden_g);
+        }
+    }
     return conden_g;
 }
-void Graph::print_graph() {
-    const long n = get_vertices_range();
-    for (long u = 1; u <= n; u++) {
-        if (does_vertex_exist(u)) {
-            for (Vertex v : get_adjacent_list(u)) {
-                std::cout << '(' << u << ',' << v << ')' << ' ';
+void Graph::visit_t(const Vertex u, Color color[], Vertex root[], Vertex current_root, Graph& target_g) {
+    root[u-1] = current_root;
+    color[u-1] = Color::Grey;
+    for (Vertex v : get_adjacent_list(u)) {
+        if (color[v-1] == Color::White) {
+            visit_t(v, color, root, current_root, target_g);
+        }
+        else if (color[v-1] == Color::Black) {
+            if (root[v-1] != root[u-1]) {
+                LinkedList<Vertex>& adj_list = target_g.get_adjacent_list(root[v-1]);
+                if (adj_list.is_empty() || adj_list.peek_tail() != root[u-1]) {
+                    target_g.add_edge(root[v-1], root[u-1]);
+                }
             }
         }
     }
-    std::cout << std::endl;
+    color[u-1] = Color::Black;
+}
+void Graph::print_graph() {
+    std::cout << vertices_count << ' ' << edges_count;
 }

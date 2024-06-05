@@ -33,9 +33,11 @@ public:
     }
     void set_length(const long length) {
         if (length_set == true) { return; }
-        if (length <= 0) { throw InvalidInputException(); }
+        if (length < 0) { throw InvalidInputException(); }
         this->length = length;
-        vec = new T[this->length];
+        if (length != 0) {
+            vec = new T[this->length];
+        }
         length_set = true;
     }
     T& operator[](const long index) {

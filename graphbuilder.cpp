@@ -10,7 +10,7 @@ void GraphBuilder::input_number_of_vertices() {
     long input;
     std::cin >> buffer;
     flush_cin();
-    input = parse_long(buffer);
+    input = parse_long(buffer, true);
     try {
         graph.make_empty_graph(input, true);
     } catch (InvalidInputException& e) { invalid_input(); }
@@ -19,7 +19,7 @@ void GraphBuilder::input_number_of_vertices() {
 
 void GraphBuilder::input_number_of_edges() {
     const long n = graph.get_vertices_range();
-    const long MAX_EDGES = (n * (n-1)) / 2;
+    const long MAX_EDGES = n * (n-1);
     char buffer[MAX_LENGTH];
     long input;
     std::cin >> buffer;

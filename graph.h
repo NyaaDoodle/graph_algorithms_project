@@ -28,6 +28,8 @@ private:
     Vector<LinkedList<Vertex>> adjacentListVector;
     Vector<bool> is_exist;
     long vertices_count = 0;
+    long edges_count = 0;
     void visit_f(const Vertex u, Color color[], LinkedList<Vertex>& f);
+    void visit_t(const Vertex u, Color color[], Vertex root[], Vertex current_root, Graph& target_g);
 };
 

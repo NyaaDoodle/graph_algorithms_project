@@ -39,11 +39,18 @@ public:
         if (head == nullptr) { tail = nullptr; }
         delete temp;
     }
+    void push_head(const T& t) {
+        LinkedNode *new_node = new LinkedNode(t);
+        if (is_empty()) { head = tail = new_node; }
+        else {
+            new_node->next = head;
+            head = new_node;
+        }
+    }
     void push_tail(const T& t) {
         LinkedNode *new_node = new LinkedNode(t);
-        if (is_empty()) {
-            head = tail = new_node;
-        } else {
+        if (is_empty()) { head = tail = new_node; }
+        else {
             tail->next = new_node;
             tail = new_node;
         }
@@ -79,6 +86,13 @@ public:
         else {
             throw ItemNotFound();
         }
+    }
+    LinkedList<T> get_reversed_list() {
+        LinkedList<T> rev;
+        for (T t : *this) {
+            rev.push_head(t);
+        }
+        return rev;
     }
     class iterator {
     public:
