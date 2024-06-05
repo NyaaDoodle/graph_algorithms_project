@@ -2,14 +2,12 @@
 #include "exception.h"
 #include <iostream>
 
-Graph::Graph(const Graph& g) {
-    
-}
-void Graph::make_empty_graph(const long vertex_range) {
+void Graph::make_empty_graph(const long vertex_range, const bool add_all) {
     adjacentListVector.set_length(vertex_range);
     is_exist.set_length(vertex_range);
-    for (long i = 0; i < vertex_range; i++) {
-        is_exist[i] = false;
+    for (long u = 1; u <= vertex_range; u++) {
+        if (add_all) { add_vertex(u); }
+        else { is_exist[u-1] = false; }
     }
 }
 LinkedList<Vertex>& Graph::get_adjacent_list(const Vertex u) {
@@ -64,12 +62,24 @@ void Graph::visit_f(const Vertex u, Color color[], LinkedList<Vertex>& f) {
     color[u-1] = Color::Black;
     f.push_tail(u);
 }
-//Graph Graph::get_transposed_graph() {
-//    return Graph();
-//}
-//Graph Graph::get_condensation_graph() {
-//    return Graph();
-//}
+Graph Graph::get_transposed_graph() {
+    Graph transpose_g;
+    transpose_g.make_empty_graph(vertices_count, true);
+    for (long u = 1; u <= vertices_count; u++) {
+        for (Vertex v : get_adjacent_list(u)) {
+            transpose_g.add_edge(v, u);
+        }
+    }
+    return transpose_g;
+}
+Graph Graph::get_condensation_graph() {
+    Graph conden_g;
+    conden_g.make_empty_graph(vertices_count);
+    LinkedList<Vertex> f = dfs_to_f_list();
+    Graph gt = get_transposed_graph();
+    
+    return conden_g;
+}
 void Graph::print_graph() {
     const long n = get_vertices_range();
     for (long u = 1; u <= n; u++) {

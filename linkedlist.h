@@ -15,9 +15,19 @@ public:
             push_tail(t);
         }
     }
-    LinkedList& operator=(const LinkedList& ll) = delete;
+    LinkedList& operator=(const LinkedList& ll) {
+        if (&ll != this) {
+            while (!is_empty()) {
+                pop_head();
+            }
+            for (T t : ll) {
+                push_tail(t);
+            }
+        }
+        return *this;
+    }
     ~LinkedList() {
-        while (!(is_empty())) {
+        while (!is_empty()) {
             pop_head();
         }
     }

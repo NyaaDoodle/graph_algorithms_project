@@ -12,10 +12,7 @@ void GraphBuilder::input_number_of_vertices() {
     flush_cin();
     input = parse_long(buffer);
     try {
-        graph.make_empty_graph(input);
-        for (long i = 1; i <= graph.get_vertices_range(); i++) {
-            graph.add_vertex(i);
-        }
+        graph.make_empty_graph(input, true);
     } catch (InvalidInputException& e) { invalid_input(); }
     catch (IndexOutOfBoundsException& e) { invalid_input(); }
 }
